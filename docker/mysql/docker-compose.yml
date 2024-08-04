@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3000:3306" # Sử dụng cổng mặc định của MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: 08012005
+      MYSQL_DATABASE: SGr
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
