@@ -32,6 +32,7 @@ jobs:
           context: .
           push: true
           tags: vantien8105/vantien8105:latest
+          file: ./rsc/Dockerfile
   # Job 2: Deploy
   deploy:
     needs: build_and_test
