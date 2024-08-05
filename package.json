@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "server/server.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./rsc/sever/server.js",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "author": "",
   "license": "ISC",
