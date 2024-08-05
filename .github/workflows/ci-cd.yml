@@ -1,16 +1,4 @@
-# version: '3'
-# services:
-#   app:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     ports:
-#       - "3000:3000"
-#     environment:
-#       - NODE_ENV=production
-#     volumes:
-#       - .:/app
-#     command: npm start
+
 
 name: CI/CD Pipeline
 
@@ -34,7 +22,7 @@ jobs:
 
       - name: Build and test
         run: |
-          docker build -t vantien8105 .
+          docker build -t vantien8105 -f rsc/Dockerfile .
           docker run vantien8105 npm test
 
       - name: Push image to Docker Hub
