@@ -48,9 +48,10 @@ jobs:
 
       - name: Create SSH key file
         run: |
+          mkdir -p $HOME/.ssh
           echo "$SSH_PRIVATE_KEY" > $HOME/.ssh/id_rsa
           chmod 600 $HOME/.ssh/id_rsa
-          ssh-add $HOME/.ssh/id_rsa
+
       - name: Add SSH key to agent
         run: |
           eval "$(ssh-agent -s)"
