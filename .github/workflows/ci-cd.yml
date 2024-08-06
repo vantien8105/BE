@@ -48,9 +48,9 @@ jobs:
           chmod 600 /tmp/id_rsa
           ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vantien8105:latest
-          sudo docker stop ubuntu-s-group-app-1 || true
-          sudo docker rm ubuntu-s-group-app-1 || true
-          sudo docker run -d -p 3000:3000 --name ubuntu-s-group-app-1 --network ubuntu_default \
+          sudo docker stop ubuntu-vantien8105-1 || true
+          sudo docker rm ubuntu-vantien8105-1 || true
+          sudo docker run -d -p 3000:3000 --name ubuntu-vantien8105-1 --network ubuntu_default \
             -e DB_HOST=db \
             -e DB_PORT=3306 \
             -e DB_USER=${{ secrets.DB_USERNAME }} \
