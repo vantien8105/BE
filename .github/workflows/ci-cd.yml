@@ -52,15 +52,6 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > $HOME/.ssh/id_rsa
           chmod 600 $HOME/.ssh/id_rsa
 
-      - name: Add SSH key to agent
-        run: |
-          eval "$(ssh-agent -s)"
-          ssh-add $HOME/.ssh/id_rsa
-      - name: Verify SSH key file
-        run: |
-          ls -l /tmp/id_rsa
-          cat /tmp/id_rsa
-
       - name: Deploy to server
         run: |
           echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
