@@ -61,7 +61,7 @@ jobs:
             -e DB_PORT=3306 \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -e nameDB=SGr \
-            -e passwordDB=$08012005 \
+            -e passwordDB=08012005 \
             vantien8105/rsc-backend:latest
           EOF
         env:
