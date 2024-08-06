@@ -53,17 +53,17 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
           chmod 600 /tmp/id_rsa
           ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vantien8105:latest
-          sudo docker stop ubuntu-vantien8105-1 || true
-          sudo docker rm ubuntu-vantien8105-1 || true
-          sudo docker run -d -p 3000:3000 --name ubuntu-vantien8105-1 --network ubuntu_default \
-            -e DB_HOST=db \
-            -e DB_PORT=3306 \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e nameDB=${{ secrets.NAMEDB }} \
-            -e passwordDB=${{ secrets.PASSWORDDB }} \
-            ${{ secrets.DOCKERHUB_USERNAME }}/vantien8105:latest
-          EOF
+           sudo docker pull vantien8105/rsc-backend:latest
+           sudo docker stop my_container || true
+           sudo docker rm my_container || true
+           sudo docker run -d -p 3000:3000 --name my_container \
+             -e DB_HOST=${{ secrets.DB_HOST }} \
+             -e DB_PORT=${{ secrets.DB_PORT }} \
+             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+             -e nameDB=${{ secrets.NAMEDB }} \
+             -e passwordDB=${{ secrets.PASSWORDDB }} \
+              vantien8105/rsc-backend:latest
+           EOF
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
