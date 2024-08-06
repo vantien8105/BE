@@ -41,12 +41,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Check SSH connection
+        run: ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'echo "SSH Connection successful"'
+      - name: Debug SSH connection
+        run: ssh -vvv -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'echo "SSH Connection successful"'
+      - name: Create SSH key file
+        run: |
+          echo "$SSH_PRIVATE_KEY" > $HOME/.ssh/id_rsa
+          chmod 600 $HOME/.ssh/id_rsa
+          ssh-add $HOME/.ssh/id_rsa
+      - name: Add SSH key to agent
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add $HOME/.ssh/id_rsa
 
       - name: Deploy to server
         run: |
           echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
           chmod 600 /tmp/id_rsa
-          ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << EOF
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vantien8105:latest
           sudo docker stop ubuntu-vantien8105-1 || true
           sudo docker rm ubuntu-vantien8105-1 || true
