@@ -50,9 +50,9 @@ jobs:
 
       - name: Deploy to server
         run: |
-          mkdir -p /tmp/id_rsa
-          echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
-          chmod 600 /tmp/id_rsa
+          mkdir -p /tmp/id_rsa_directory
+          echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa_directory/id_rsa
+          chmod 600 /tmp/id_rsa_directory/id_rsa
           ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vantien8105:latest
           sudo docker stop ubuntu-vantien8105-1 || true
