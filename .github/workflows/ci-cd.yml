@@ -59,7 +59,7 @@ jobs:
           sudo docker run -d -p 3000:3000 --name ubuntu-vantien8105-1 --network ubuntu_default \
             -e DB_HOST=db \
             -e DB_PORT=3306 \
-            -e JWT_SECRET = ${{secrets.JWT_SECRET}} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -e nameDB=${{ secrets.NAMEDB }} \
             -e passwordDB=${{ secrets.PASSWORDDB }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/vantien8105:latest
