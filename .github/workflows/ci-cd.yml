@@ -60,8 +60,8 @@ jobs:
             -e DB_HOST=db \
             -e DB_PORT=3306 \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e nameDB=${{ secrets.NAMEDB }} \
-            -e passwordDB=${{ secrets.PASSWORDDB }} \
+            -e nameDB=SGr \
+            -e passwordDB=$08012005 \
             vantien8105/rsc-backend:latest
           EOF
         env:
