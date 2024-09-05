@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET
 
-const Autho = (req, res, next) => {
+const Auth = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if(!token){
@@ -13,13 +13,13 @@ const Autho = (req, res, next) => {
     
     jwt.verify(token, JWT_SECRET, (err, user) =>{
         if(err){
-            return res.status(403).send({error:"Token deo ok"});
+            return res.status(403).send({error:"Token invalid"});
         }
 
-        req.user = user; //sau khi xac thuc thanh cong thi luu thong tin user vao req de middleware và route để xử lý tiếp theo với thông tin người dùng đã xác thực.
+        req.user = user; //sau khi xac thuc thanh cong thi luu thong tin user vao req de middleware và route
 
         next();
     })
 }
 
-module.exports = Autho;
+module.exports = Auth;

@@ -15,7 +15,7 @@ router.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
     try {
 
-        const hashedPassword = await bcrypt.hash(password, 10); // số 10 ý nghĩa là hàm băm sẽ băm 2^10 lần. càng băm nhiều thì bảo mặt càng cao nma tg thực thi càng lớn
+        const hashedPassword = await bcrypt.hash(password, 10); //2^10
 
         const result = await db.query(
             'INSERT INTO users (username, password) VALUES (?, ?)',
@@ -38,7 +38,7 @@ router.post('/api/login', async (req, res) => {
         const results = await db.query('SELECT id, username, password FROM users WHERE username = ?', [username]);
         console.log(results);
         if (results.length === 0) {
-            return res.status(400).json({ error: 'Invalid username or password' });
+            return res.status(400).json({ error: 'Username is not exist' });
         }
         
         const user = results[0];

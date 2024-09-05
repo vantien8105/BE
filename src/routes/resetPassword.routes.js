@@ -1,7 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const db = require('../config/connect_DB'); // Giả định rằng bạn có một mô-đun db để kết nối cơ sở dữ liệu
+const db = require('../config/connect_DB'); 
 const reset_PW = express.Router();
 const JWT = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -22,7 +22,7 @@ const sendOtp = async (email, otp) => {
 });
 
   const mailOptions = {
-    from: 'sarnold84@ethereal.email', // thay bằng email của bạn
+    from: 'sarnold84@ethereal.email',
     to: email,
     subject: 'Your OTP Code',
     text: `Your OTP code is: ${otp}`
@@ -61,7 +61,7 @@ reset_PW.post('/sendOTP', async (req, res) => {
   }
 });
 
-reset_PW.post('/newPS', async(req , res) =>{
+reset_PW.post('/newPW', async(req , res) =>{
   const email = req.body.email;
   const OTPToken = req.body.OTPToken;
   const newPassword = req.body.newPassword;

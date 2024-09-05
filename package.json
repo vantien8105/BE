@@ -1,7 +1,7 @@
 {
   "name": "rsc",
   "version": "1.0.0",
-  "main": "server/server.js",
+  "main": "src/server/server.js",
   "scripts": {
     "start": "nodemon ./rsc/sever/server.js",
     "test": "echo \"No tests specified\" && exit 0"

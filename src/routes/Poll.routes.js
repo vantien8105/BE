@@ -13,7 +13,7 @@ const getID = async(res, mail)=>{
     return user_ID[0].id_user;
 }
 
-//tao poll va options
+//create new poll and options for it
 app.post('/createPoll/', async(req,res) =>{
     try{
     const title = req.body.title;
@@ -25,7 +25,7 @@ app.post('/createPoll/', async(req,res) =>{
     console.log(options);
     const date = new Date();
     const user_ID = await getID(res, user_create);
-    const [titleCheck] = await db.query('SELECT COUNT(*) AS count FROM poll WHERE title = ?', [title]);
+    const [titleCheck] = await db.query('SELECT COUNT(*) AS count FROM poll WHERE title = ? and user_ID = ?', [title , user_ID]);
     if (titleCheck[0].count > 0) {
         return res.status(400).json({ message: 'Title already exists' });
     }
@@ -46,7 +46,7 @@ app.post('/createPoll/', async(req,res) =>{
     }
 });
 
-//them option cho poll
+//add option for poll
 app.post('/createOption/:id', async(req, res) =>{
    try{
     const user = req.body.email;
@@ -57,7 +57,7 @@ app.post('/createOption/:id', async(req, res) =>{
         return res.status(400).send({error: 'option is empty'});
     }
     await db.query('INSERT INTO opion (content, poll_ID, user_ID ) value(? , ? , ?)', [option, poll_ID, user_ID]);
-    res.send({message:'Option created'});
+    res.send({message:'Option was created'});
    }
     catch(error){
         res.status(500).json({ error: error.message });
@@ -73,6 +73,15 @@ app.post('/vote/:id', async (req, res) =>{
     const option_ID = req.body.option_ID;
     const poll_ID = req.params.id;
     const user_ID =await getID(res, user);
+    const check = await db.query('SELECT * from opion WHERE poll_ID = ? and option_ID = ?', [poll_ID, option_ID]);
+    console.log(check[0].length);
+    console.log(check);
+    
+    if(check[0].length == 0){
+        return res.status(404).send({message:"Not found your option"});
+    }
+    
+
     await db.query('INSERT INTO user_opion (user_ID, poll_ID, option_ID) value (? , ?, ?)', [user_ID, poll_ID, option_ID]);
     res.send({message:'Your vote recorded'});
     }
@@ -82,12 +91,12 @@ app.post('/vote/:id', async (req, res) =>{
     }
 })
 
-//xem cac option cua mot poll bang id
+//get option of poll by id
 app.get('/getOption/:id', async (req, res) =>{
    try{ 
     const poll_ID = req.params.id;
 
-    // Lấy thông tin của poll
+    // get poll's information
     const [pollInfo] = await db.query(`
         SELECT 
             poll_ID, title, user_ID, status
@@ -101,7 +110,7 @@ app.get('/getOption/:id', async (req, res) =>{
         return res.status(404).json({ message: 'Poll not found' });
     }
 
-    // Lấy số lượng vote cho các option và thông tin người bình chọn
+    // get count of option and user's information
     const [voteCounts] = await db.query(`
         SELECT 
             o.option_ID, o.content, u.email, COUNT(uo.user_ID) AS vote_count
@@ -117,23 +126,7 @@ app.get('/getOption/:id', async (req, res) =>{
             o.option_ID, o.content, u.email
     `, [poll_ID]);
         console.log(voteCounts);
-        
-    // Sắp xếp lại kết quả theo option_ID và gom nhóm người dùng đã bình chọn
-    const options = voteCounts.reduce((acc, curr) => {
-        const option = acc.find(o => o.option_ID === curr.option_ID);
-        if (option) {
-            option.users.push(curr.email);
-            option.vote_count = curr.vote_count; // Cập nhật vote_count nếu cần thiết
-        } else {
-            acc.push({
-                option_ID: curr.option_ID,
-                content: curr.content,
-                vote_count: curr.vote_count,
-                users: curr.email ? [curr.email] : []
-            });
-        }
-        return acc;
-    }, []);
+
 
     res.status(200).json({
         poll: pollInfo[0],
@@ -148,24 +141,25 @@ app.get('/getOption/:id', async (req, res) =>{
 app.delete('/DeletePoll/:poll_id', async (req, res) =>{
     try{
         const poll_ID = req.params.poll_id;
-        // Xóa các vote liên quan đến các option trong poll
-        await connection.query(`
+        // delete vote
+        await db.query(`
             DELETE FROM user_opion uo
             WHERE uo.poll_ID = ?
         `, [poll_ID]);
 
-        // Xóa các option liên quan đến poll
-        await connection.query(`
+        // delete option
+        await db.query(`
             DELETE FROM opion
             WHERE poll_ID = ?
         `, [poll_ID]);
 
-        // Xóa poll
-        await connection.query(`
+        // delete poll
+        await db.query(`
             DELETE FROM poll
             WHERE poll_ID = ?
         `, [poll_ID]);
     }
+
     catch (error){
         res.status(500).json({ error: error.message });
         console.log(error);
